@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tu Salud, Tu Ahorro: Seguro Personalizado</title>
+    <!-- Incluye Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Fuente Inter de Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Definición de colores personalizados en Tailwind CSS */
+        /* Basado en el azul oscuro y verde para un look profesional */
+        :root {
+            --color-primary-dark-blue: #1D3557; /* Azul oscuro */
+            --color-primary-medium-blue: #2A476F; /* Un poco más claro para gradientes */
+            --color-primary-light-blue: #E0EBF5; /* Muy claro para fondos de iconos */
+            --color-accent-green-dark: #059669; /* Verde oscuro para asesor */
+            --color-accent-green-medium: #10B981; /* Verde medio para asesor */
+            --color-accent-green-light: #D1FAE5; /* Verde muy claro para fondos */
+            --color-pastel-green: #A7F3D0; /* Verde pastel para "Ahorro" y "Personalizado" */
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* Color de fondo muy claro */
+            color: #1f2937; /* Color de texto principal */
+        }
+        .container {
+            max-width: 1280px;
+        }
+        .btn-primary {
+            background-image: linear-gradient(to right, var(--color-primary-dark-blue), var(--color-primary-medium-blue));
+            color: white;
+            padding: 1rem 2.5rem;
+            border-radius: 9999px;
+            font-weight: 700;
+            font-size: 1.125rem; /* text-lg */
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            box-shadow: 0 4px 15px rgba(29, 53, 87, 0.3); /* Sombra basada en el azul oscuro */
+        }
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(29, 53, 87, 0.4);
+        }
+        .section-heading {
+            font-size: 3rem; /* text-5xl */
+            font-weight: 800; /* font-extrabold */
+            color: #1a202c;
+            line-height: 1.2;
+            margin-bottom: 2rem;
+        }
+        .feature-card {
+            background-color: #ffffff;
+            border-radius: 1rem; /* rounded-xl */
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+            padding: 2.5rem;
+            text-align: center;
+            transition: transform 0.3s ease-in-out;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        .icon-circle {
+            background-color: var(--color-primary-light-blue); /* Azul claro personalizado */
+            color: var(--color-primary-dark-blue); /* Azul oscuro personalizado */
+            border-radius: 50%;
+            width: 70px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem; /* text-5xl */
+            margin: 0 auto 1.5rem auto;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        .bg-hero-gradient {
+            background: linear-gradient(to bottom right, var(--color-primary-dark-blue), var(--color-primary-medium-blue)); /* Degradado de azul personalizado */
+        }
+        .text-gradient {
+            background: linear-gradient(to right, var(--color-primary-dark-blue), var(--color-primary-medium-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .text-pastel-green { /* Clase para el verde pastel */
+            color: var(--color-pastel-green);
+        }
+
+        /* Estilos del Chatbot */
+        #chatbot-button {
+            position: fixed;
+            top: 50%; /* Centrado verticalmente */
+            right: 20px; /* Posición derecha */
+            transform: translateY(-50%); /* Ajuste para centrado perfecto */
+            background-color: var(--color-primary-dark-blue); /* Azul oscuro personalizado */
+            color: white;
+            border-radius: 50%;
+            width: 70px; /* Más grande */
+            height: 70px; /* Más grande */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem; /* Icono más grande */
+            box-shadow: 0 4px 15px rgba(29, 53, 87, 0.4);
+            cursor: pointer;
+            z-index: 1000;
+            transition: transform 0.2s ease-in-out;
+        }
+        #chatbot-button:hover {
+            transform: translateY(-50%) scale(1.05); /* Ajuste para centrado perfecto */
+        }
+        #chatbot-container {
+            position: fixed;
+            top: 50%; /* Centrado verticalmente */
+            right: 100px; /* Se abre a la izquierda del botón (70px botón + 10px margen + 20px para no pegar al borde) */
+            transform: translateY(-50%); /* Ajuste para centrado perfecto */
+            width: 350px;
+            height: 500px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 999;
+            opacity: 0;
+            pointer-events: none;
+            transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+        }
+        #chatbot-container.active {
+            transform: translateY(-50%) scale(1); /* Ajuste para centrado perfecto */
+            opacity: 1;
+            pointer-events: auto;
+        }
+        #chatbot-header {
+            background-image: linear-gradient(to right, var(--color-primary-dark-blue), var(--color-primary-medium-blue));
+            color: white;
+            padding: 1rem;
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+        }
+        #chatbot-header button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        #chatbot-messages {
+            flex-grow: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            background-color: #f0f4f8; /* Fondo de chat suave */
+        }
+        .message-bubble {
+            max-width: 80%;
+            padding: 0.75rem 1rem;
+            border-radius: 1rem;
+            margin-bottom: 0.75rem;
+            word-wrap: break-word;
+        }
+        .message-user {
+            background-color: var(--color-primary-light-blue); /* Azul claro personalizado */
+            align-self: flex-end;
+            margin-left: auto;
+            border-bottom-right-radius: 0.25rem;
+        }
+        .message-bot {
+            background-color: #e2e8f0; /* Gris claro para bot */
+            align-self: flex-start;
+            margin-right: auto;
+            border-bottom-left-radius: 0.25rem;
+        }
+        #chatbot-input-area {
+            display: flex;
+            padding: 1rem;
+            border-top: 1px solid #e2e8f0;
+            background-color: #ffffff;
+        }
+        #chatbot-input {
+            flex-grow: 1;
+            border: 1px solid #cbd5e1;
+            border-radius: 9999px;
+            padding: 0.75rem 1rem;
+            font-size: 1rem;
+            outline: none;
+        }
+        #chatbot-input:focus {
+            border-color: var(--color-primary-dark-blue);
+            box-shadow: 0 0 0 2px rgba(29, 53, 87, 0.2);
+        }
+        #chatbot-send-button {
+            background-color: var(--color-primary-dark-blue);
+            color: white;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out;
+        }
+        #chatbot-send-button:hover {
+            background-color: var(--color-primary-medium-blue);
+        }
+
+        /* Estilos del Asesor de Bienestar (eliminados o comentados si no se usan) */
+        /*
+        #wellness-advisor-button { ... }
+        #wellness-advisor-container { ... }
+        #wellness-advisor-header { ... }
+        #wellness-advisor-content { ... }
+        #wellness-advisor-input { ... }
+        #wellness-advisor-response { ... }
+        #wellness-advisor-feedback { ... }
+        */
+        .loading-spinner-chat {
+            border: 3px solid rgba(0, 0, 0, 0.1);
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border-left-color: var(--color-primary-dark-blue); /* Azul para chat */
+            animation: spin 1s ease infinite;
+            display: inline-block;
+            vertical-align: middle;
+            margin-left: 10px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Hero Section -->
+    <section class="bg-hero-gradient text-white py-20 md:py-32 relative overflow-hidden">
+        <div class="container mx-auto px-6 text-center">
+            <!-- Encabezado de Atlantic Health - Ahora texto grande -->
+            <h1 class="text-6xl md:text-8xl font-extrabold leading-tight mb-6 animate-fade-in-up">
+                Atlantic Health
+            </h1>
+
+            <h2 class="text-4xl md:text-6xl font-extrabold leading-tight mb-6 animate-fade-in-up">
+                Tu Salud. Tu Control. Tu <span class="text-pastel-green">Ahorro.</span>
+            </h2>
+            <p class="text-xl md:text-2xl mb-10 opacity-90 animate-fade-in-up delay-200">
+                El seguro de gastos médicos mayores que te premia por vivir una vida <span class="text-pastel-green">personalizada</span>.
+            </p>
+            <a href="#learn-more" class="btn-primary inline-block animate-fade-in-up delay-400">
+                Quiero mi Seguro personalizado
+            </a>
+        </div>
+        <!-- Decorative background elements -->
+        <div class="absolute inset-0 z-0 opacity-10">
+            <svg class="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
+                <defs>
+                    <radialGradient id="grad1" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+                        <stop offset="0%" style="stop-color:rgb(255,255,255);stop-opacity:0.2" />
+                        <stop offset="100%" style="stop-color:rgb(255,255,255);stop-opacity:0" />
+                    </radialGradient>
+                </defs>
+                <circle cx="20" cy="80" r="15" fill="url(#grad1)"></circle>
+                <circle cx="80" cy="20" r="12" fill="url(#grad1)"></circle>
+                <circle cx="50" cy="50" r="20" fill="url(#grad1)"></circle>
+            </svg>
+        </div>
+    </section>
+
+    <!-- Section: ¿Por qué elegirnos? -->
+    <section class="py-16 md:py-24 bg-white" id="learn-more">
+        <div class="container mx-auto px-6">
+            <h2 class="section-heading text-center mb-12">
+                ¿Por qué un Seguro <span class="text-gradient">Personalizado?</span>
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="feature-card">
+                    <div class="icon-circle">💰</div>
+                    <h3 class="text-2xl font-semibold mb-4 text-gray-800">Ahorro Real</h3>
+                    <p class="text-gray-600">Obtén descuentos exclusivos en tu prima anual por tus hábitos saludables y datos de bienestar.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="icon-circle">❤️</div>
+                    <h3 class="text-2xl font-semibold mb-4 text-gray-800">Vida más Saludable</h3>
+                    <p class="text-gray-600">Te motivamos a mantenerte activo y cuidar tu salud, con beneficios tangibles para ti.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="icon-circle">✨</div>
+                    <h3 class="text-2xl font-semibold mb-4 text-gray-800">Diseñado para Ti</h3>
+                    <p class="text-gray-600">Tu seguro se adapta a tu estilo de vida único, ¡olvídate de los promedios!</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section: ¿Cómo Funciona? -->
+    <section class="py-16 md:py-24 bg-gray-50">
+        <div class="container mx-auto px-6">
+            <h2 class="section-heading text-center mb-12">
+                Así es como <span class="text-gradient">funciona:</span>
+            </h2>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div class="space-y-8">
+                    <div class="flex items-start bg-white p-6 rounded-lg shadow-lg">
+                        <div class="icon-circle flex-shrink-0 mr-6 text-2xl">1</div>
+                        <div>
+                            <h3 class="text-xl font-semibold mb-2 text-gray-800">Registra tu Bienestar</h3>
+                            <p class="text-gray-600">Conecta tus wearables o comparte tus resultados de laboratorio de forma segura a través de nuestra app.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start bg-white p-6 rounded-lg shadow-lg">
+                        <div class="icon-circle flex-shrink-0 mr-6 text-2xl">2</div>
+                        <div>
+                            <h3 class="text-xl font-semibold mb-2 text-gray-800">Análisis Inteligente</h3>
+                            <p class="text-gray-600">Nuestro modelo avanzado evalúa tus datos de salud para entender tu perfil de riesgo individual.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start bg-white p-6 rounded-lg shadow-lg">
+                        <div class="icon-circle flex-shrink-0 mr-6 text-2xl">3</div>
+                        <div>
+                            <h3 class="text-xl font-semibold mb-2 text-gray-800">Recibe tu Descuento</h3>
+                            <p class="text-gray-600">Al renovar tu póliza, aplicamos un factor de descuento basado en tu estilo de vida saludable.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="relative flex flex-col sm:flex-row justify-center items-center gap-4 p-4">
+                    <!-- Apple Watch Image (Circular) -->
+                    <img src="https://images.unsplash.com/photo-1609096458733-95b38583ac4e?q=80&w=774&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Apple Watch con la aplicación de Salud mostrando datos de actividad." class="rounded-full shadow-2xl w-32 h-32 md:w-40 md:h-40 object-cover aspect-square">
+                    <!-- New Images (Circular) -->
+                    <img src="https://images.pexels.com/photos/5037383/pexels-photo-5037383.jpeg" alt="Primer plano de una persona con un reloj en la muñeca." class="rounded-full shadow-2xl w-32 h-32 md:w-40 md:h-40 object-cover aspect-square">
+                    <img src="https://images.pexels.com/photos/4482932/pexels-photo-4482932.jpeg" alt="Una mujer sentada sobre una pelota de ejercicio azul." class="rounded-full shadow-2xl w-32 h-32 md:w-40 md:h-40 object-cover aspect-square">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section: Beneficios Detallados -->
+    <section class="py-16 md:py-24 bg-white">
+        <div class="container mx-auto px-6">
+            <h2 class="section-heading text-center mb-12">
+                Beneficios de un Estilo de Vida Saludable en tu Seguro <span class="text-gradient">Personalizado:</span>
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="text-center p-6 bg-blue-50 rounded-lg shadow-md">
+                    <div class="text-5xl mb-4">🚶‍♀️</div>
+                    <h4 class="font-semibold text-lg text-blue-800">Más Pasos, Menos Prima</h4>
+                    <p class="text-gray-600 text-sm">Tu actividad diaria se convierte en un activo para tu bolsillo.</p>
+                </div>
+                <div class="text-center p-6 bg-green-50 rounded-lg shadow-md">
+                    <div class="text-5xl mb-4">😴</div>
+                    <h4 class="font-semibold text-lg text-green-800">Sueño Reparador, Mejor Tarifa</h4>
+                    <p class="text-gray-600 text-sm">La calidad de tu descanso también influye positivamente.</p>
+                </div>
+                <div class="text-center p-6 bg-purple-50 rounded-lg shadow-md">
+                    <div class="text-5xl mb-4">🩸</div>
+                    <h4 class="font-semibold text-lg text-purple-800">Laboratorios en Óptimas Condiciones</h4>
+                    <p class="text-gray-600 text-sm">Mantén tus biomarcadores bajo control y maximiza tus descuentos.</p>
+                </div>
+                <div class="text-center p-6 bg-yellow-50 rounded-lg shadow-md">
+                    <div class="text-5xl mb-4">🏋️</div>
+                    <h4 class="font-semibold text-lg text-yellow-800">Ejercicio Intenso, Grandes Recompensas</h4>
+                    <p class="text-gray-600 text-sm">Cada minuto de ejercicio cuenta para tu salud y tu seguro.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="bg-gray-100 py-16 md:py-24">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="section-heading text-center mb-12">
+                Lo que dicen nuestros <span class="text-gradient">asegurados:</span>
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="bg-white p-8 rounded-lg shadow-xl flex flex-col items-center">
+                    <img src="https://images.unsplash.com/photo-1581292065130-c7a4155e854a?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Foto de María G., asegurada satisfecha" class="rounded-full mb-4 w-24 h-24 object-cover border-4 border-blue-400">
+                    <p class="text-lg italic text-gray-700 mb-6">"Nunca pensé que mi reloj inteligente me ayudaría a ahorrar en mi seguro. ¡Estoy fascinado con este concepto y me motiva a seguir cuidándome!"</p>
+                    <p class="font-semibold text-gray-800">- María G., 25 años</p>
+                </div>
+                <div class="bg-white p-8 rounded-lg shadow-xl flex flex-col items-center">
+                    <img src="https://plus.unsplash.com/premium_photo-1726481620318-4efd14ec073d?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Foto de Carlos R., asegurado satisfecho" class="rounded-full mb-4 w-24 h-24 object-cover border-4 border-blue-400">
+                    <p class="text-lg italic text-gray-700 mb-6">"¡Es genial que una aseguradora finalmente reconozca el esfuerzo de mantenerse sano! Mi prima es más baja y me siento más empoderado."</p>
+                    <p class="font-semibold text-gray-800">- Carlos R., 32 años</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="py-16 md:py-24 bg-white">
+        <div class="container mx-auto px-6">
+            <h2 class="section-heading text-center mb-12">
+                Preguntas <span class="text-gradient">Frecuentes:</span>
+            </h2>
+            <div class="max-w-3xl mx-auto space-y-6">
+                <div class="bg-gray-50 p-6 rounded-lg shadow-md">
+                    <h3 class="font-semibold text-xl text-gray-800 mb-2">¿Mis datos de salud están seguros?</h3>
+                    <p class="text-gray-600">Absolutamente. Tus datos, blindados y seguros, para que tú solo te enfoques en lo que importa. Implementamos los más altos estándares de seguridad y privacidad (cumpliendo la Ley Federal de Protección de Datos Personales en Posesión de los Particulares para proteger tu información).</p>
+                </div>
+                <div class="bg-gray-50 p-6 rounded-lg shadow-md">
+                    <h3 class="font-semibold text-xl text-gray-800 mb-2">¿Es obligatorio compartir mis datos?</h3>
+                    <p class="text-gray-600">No, la participación en el programa de descuento es completamente voluntaria y requiere tu consentimiento expreso y revocable en todo momento. Tú decides si quieres compartir tus datos para acceder a los beneficios del descuento.</p>
+                </div>
+                <div class="bg-gray-50 p-6 rounded-lg shadow-md">
+                    <h3 class="font-semibold text-xl text-gray-800 mb-2">¿Qué pasa si mis hábitos de salud cambian?</h3>
+                    <p class="text-gray-600">El descuento se evalúa en cada renovación de póliza. Si tus hábitos mejoran, tu descuento puede aumentar. Si no, tu prima base se mantiene, sin recargos adicionales. Queremos motivarte a mantenerte sano sin penalizarte si hay fluctuaciones temporales.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action Footer -->
+    <section class="bg-hero-gradient py-16 text-white text-center">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl md:text-5xl font-bold mb-6">
+                ¡Empieza a disfrutar de los beneficios de tu salud hoy mismo!
+            </h2>
+            <p class="text-xl opacity-90 mb-8">
+                Es hora de que tu esfuerzo por una vida sana se vea recompensado.
+            </p>
+            <a href="#hero" class="btn-primary inline-block">
+                Quiero mi Tarifa Personalizada
+            </a>
+        </div>
+    </section>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 text-center text-sm">
+        <div class="container mx-auto px-6">
+            <p>&copy; 2025 Atlantic Health. Todos los derechos reservados.</p>
+            <div class="mt-4 space-x-4">
+                <a href="#" class="hover:text-white transition-colors duration-200">Política de Privacidad</a>
+                <a href="#" class="hover:text-white transition-colors duration-200">Términos y Condiciones</a>
+                <a href="#" class="hover:text-white transition-colors duration-200">Contacto</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Chatbot Button -->
+    <div id="chatbot-button">💡</div>
+
+    <!-- Chatbot Container -->
+    <div id="chatbot-container">
+        <div id="chatbot-header">
+            <span>Asistente de Transparencia 💡</span>
+            <button id="chatbot-close-button">&times;</button>
+        </div>
+        <div id="chatbot-messages" class="flex flex-col items-start">
+            <div class="message-bubble message-bot">
+                ¡Hola! Soy tu asistente virtual. Estoy aquí para aclarar cualquier duda sobre tu seguro y los descuentos. Pregúntame sobre cómo se calculan, la privacidad de tus datos o cualquier otro detalle. ¡Mi objetivo es que todo sea transparente para ti!
+            </div>
+        </div>
+        <div id="chatbot-input-area">
+            <input type="text" id="chatbot-input" placeholder="Escribe tu mensaje..." />
+            <button id="chatbot-send-button">➤</button>
+        </div>
+    </div>
+
+    <script>
+        // --- Chatbot Logic ---
+        const chatbotButton = document.getElementById('chatbot-button');
+        const chatbotContainer = document.getElementById('chatbot-container');
+        const chatbotCloseButton = document.getElementById('chatbot-close-button');
+        const chatbotMessages = document.getElementById('chatbot-messages');
+        const chatbotInput = document.getElementById('chatbot-input');
+        const chatbotSendButton = document.getElementById('chatbot-send-button');
+
+        chatbotButton.addEventListener('click', () => {
+            chatbotContainer.classList.toggle('active');
+        });
+
+        chatbotCloseButton.addEventListener('click', () => {
+            chatbotContainer.classList.remove('active');
+        });
+
+        chatbotInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        chatbotSendButton.addEventListener('click', sendMessage);
+
+        async function sendMessage() {
+            const userMessage = chatbotInput.value.trim();
+            if (userMessage === '') return;
+
+            // Add user message to chat
+            const userBubble = document.createElement('div');
+            userBubble.className = 'message-bubble message-user';
+            userBubble.textContent = userMessage;
+            chatbotMessages.appendChild(userBubble);
+            chatbotInput.value = '';
+            chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+
+            // Add typing indicator
+            const typingIndicator = document.createElement('div');
+            typingIndicator.className = 'message-bubble message-bot';
+            typingIndicator.innerHTML = 'Escribiendo<span class="loading-spinner-chat"></span>';
+            chatbotMessages.appendChild(typingIndicator);
+            chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+
+            // Call the simulated LLM response for the chatbot
+            setTimeout(async () => {
+                let botResponse = await getChatbotResponse(userMessage);
+                chatbotMessages.removeChild(typingIndicator); // Remove typing indicator
+
+                const botBubble = document.createElement('div');
+                botBubble.className = 'message-bubble message-bot';
+                botBubble.textContent = botResponse;
+                chatbotMessages.appendChild(botBubble);
+                chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+            }, 1000); // Simulate network delay
+        }
+
+        // Function to simulate LLM response for the chatbot
+        async function getChatbotResponse(message) {
+            const lowerCaseMessage = message.toLowerCase();
+
+            // Simulate responses for discount queries
+            if (lowerCaseMessage.includes('descuento') || lowerCaseMessage.includes('por qué') || lowerCaseMessage.includes('no recibí')) {
+                if (lowerCaseMessage.includes('no recibí') || lowerCaseMessage.includes('porque no')) {
+                    return "El descuento en tu póliza se calcula en función de tus hábitos de salud registrados (pasos, sueño, frecuencia cardíaca) y tus biomarcadores (colesterol, glucosa, triglicéridos). Si no recibiste un descuento, podría deberse a que tus métricas no alcanzaron los umbrales requeridos para el descuento en el momento de la renovación. Te invitamos a revisar los detalles en tu perfil de asegurado o a mejorar tus hábitos para la próxima renovación. Puedes ver los criterios en la sección 'Ejemplo de Wearable Score y Factor de Descuento' de la página.";
+                } else if (lowerCaseMessage.includes('recibí') || lowerCaseMessage.includes('cómo obtuve')) {
+                    return "¡Felicidades por tu descuento! Lo obtuviste porque tus métricas de salud (pasos diarios, calidad de sueño, frecuencia cardíaca, variabilidad de la frecuencia cardíaca y actividad vigorosa) y tus biomarcadores (colesterol, glucosa, triglicéridos) cumplieron o superaron los criterios establecidos para un estilo de vida saludable. Tu esfuerzo en la prevención y el cuidado de tu salud se ve reflejado en tu prima. ¡Sigue así! Puedes ver los criterios en la sección 'Ejemplo de Wearable Score y Factor de Descuento' de la página.";
+                }
+                return "El descuento se calcula con base en tus datos de wearables, laboratorios e historial clínico, reflejando tu estilo de vida saludable. Se aplica al renovar tu póliza si cumples ciertos criterios. ¿Te gustaría saber más sobre los criterios específicos o cómo se recopilan los datos?";
+            }
+
+            // Simulate responses for general product questions (referencing page content)
+            if (lowerCaseMessage.includes('funciona') || lowerCaseMessage.includes('proceso')) {
+                return "Nuestro seguro funciona recompensando tus hábitos saludables. Conectas tus wearables o compartes tus resultados de laboratorio, un modelo inteligente analiza tus datos, y al renovar tu póliza, aplicamos un descuento basado en tu estilo de vida saludable. Puedes ver el proceso completo en la sección 'Así es como funciona:' de la página.";
+            } else if (lowerCaseMessage.includes('datos seguros') || lowerCaseMessage.includes('privacidad')) {
+                return "La privacidad y seguridad de tus datos son nuestra prioridad. Cumplimos con la LFPDPPP (y GDPR como benchmark) y tus datos son pseudonimizados y cifrados. Nunca compartimos tu información personal sin tu consentimiento expreso. Más detalles en la sección 'Gobernanza y Cumplimiento Regulatorio'.";
+            } else if (lowerCaseMessage.includes('obligatorio compartir')) {
+                return "No, la participación en el programa de descuento es completamente voluntaria y requiere tu consentimiento expreso y revocable. Tú decides si quieres compartir tus datos para acceder a los beneficios del descuento.";
+            } else if (lowerCaseMessage.includes('cambian hábitos')) {
+                return "El descuento se evalúa en cada renovación de póliza. Si tus hábitos mejoran, tu descuento puede aumentar. Si no, tu prima base se mantiene, sin recargos adicionales. Queremos motivarte a mantenerte sano sin penalizarte si hay fluctuaciones temporales.";
+            } else if (lowerCaseMessage.includes('qué es wearable')) {
+                return "Un wearable es un dispositivo tecnológico que puedes usar, como un reloj inteligente o una pulsera de actividad, que registra datos sobre tu salud y actividad física, como pasos diarios, calidad del sueño, y frecuencia cardíaca. Usamos estos datos para entender tus hábitos y ofrecerte un descuento personalizado.";
+            } else if (lowerCaseMessage.includes('laboratorios')) {
+                return "Nos referimos a análisis clínicos de sangre que miden marcadores como colesterol, glucosa y triglicéridos, que son importantes indicadores de tu salud fisiológica. Estos datos, junto con los de tus wearables, nos ayudan a calcular tu perfil de riesgo y potencial de descuento.";
+            } else if (lowerCaseMessage.includes('riesgos')) {
+                return "Hemos identificado riesgos como la antiselección (para que solo se unan los más sanos) y el fraude. Los mitigamos manteniendo primas base competitivas, topes de descuento y sistemas de verificación de datos para asegurar la equidad y sostenibilidad del producto. Puedes ver más detalles en la sección 'Riesgos'.";
+            } else if (lowerCaseMessage.includes('cnsf')) {
+                return "La CNSF (Comisión Nacional de Seguros y Fianzas) es el organismo regulador en México. Trabajamos en estrecha colaboración con ellos, presentando nuestro modelo en fases y asegurando que cumplimos con todas las normativas para garantizar la equidad y legalidad de nuestro producto. Consulta la sección 'Gobernanza y Cumplimiento Regulatorio'.";
+            }
+
+            // Default fallback response
+            return "Gracias por tu pregunta. Estoy aquí para resolver tus dudas sobre el seguro personalizado. ¿Podrías ser más específico, por favor, o preguntar sobre 'descuento', 'cómo funciona', 'privacidad de datos', o 'riesgos'?";
+        }
+
+
+        // --- Wellness Advisor Logic (Removed) ---
+        /*
+        const wellnessAdvisorButton = document.getElementById('wellness-advisor-button');
+        const wellnessAdvisorContainer = document.getElementById('wellness-advisor-container');
+        const wellnessAdvisorCloseButton = document.getElementById('wellness-advisor-close-button');
+        const wellnessAdvisorInput = document.getElementById('wellness-advisor-input');
+        const wellnessAdvisorSubmitButton = document.getElementById('wellness-advisor-submit-button');
+        const wellnessAdvisorResponse = document.getElementById('wellness-advisor-response');
+        const wellnessAdvisorFeedback = document = document.getElementById('wellness-advisor-feedback');
+
+        wellnessAdvisorButton.addEventListener('click', () => {
+            wellnessAdvisorContainer.classList.toggle('active');
+            // Cierra el chatbot si está abierto
+            chatbotContainer.classList.remove('active');
+            wellnessAdvisorResponse.classList.add('hidden'); // Limpia la respuesta anterior
+            wellnessAdvisorInput.value = ''; // Limpia el input
+            wellnessAdvisorFeedback.classList.add('hidden'); // Oculta mensajes de error
+        });
+
+        wellnessAdvisorCloseButton.addEventListener('click', () => {
+            wellnessAdvisorContainer.classList.remove('active');
+        });
+
+        wellnessAdvisorSubmitButton.addEventListener('click', async () => {
+            const userHealthInput = wellnessAdvisorInput.value.trim();
+            if (userHealthInput === '') {
+                wellnessAdvisorFeedback.textContent = "Por favor, describe tu estado de salud para recibir consejos.";
+                wellnessAdvisorFeedback.classList.remove('hidden');
+                return;
+            } else {
+                wellnessAdvisorFeedback.classList.add('hidden');
+            }
+
+            wellnessAdvisorSubmitButton.disabled = true;
+            wellnessAdvisorSubmitButton.innerHTML = 'Generando Consejos<span class="loading-spinner-advisor"></span>';
+            wellnessAdvisorResponse.classList.add('hidden'); // Oculta la respuesta anterior mientras se genera una nueva
+
+            try {
+                const llmAdvice = await getWellnessAdvisorResponse(userHealthInput);
+                wellnessAdvisorResponse.textContent = llmAdvice;
+                wellnessAdvisorResponse.classList.remove('hidden');
+            } catch (error) {
+                console.error("Error al obtener consejos del asesor de bienestar:", error);
+                wellnessAdvisorFeedback.textContent = "Lo siento, hubo un error al generar los consejos. Intenta de nuevo más tarde.";
+                wellnessAdvisorFeedback.classList.remove('hidden');
+            } finally {
+                wellnessAdvisorSubmitButton.disabled = false;
+                wellnessAdvisorSubmitButton.innerHTML = 'Obtener Consejos';
+            }
+        });
+
+        // Function to call the LLM for personalized wellness advice
+        async function getWellnessAdvisorResponse(userHealthInput) {
+            const prompt = `Actúa como un asesor de bienestar para un seguro de salud personalizado. Un asegurado describe su estado de salud o sus metas. Tu objetivo es darle consejos prácticos y motivadores para mejorar su bienestar, haciendo una conexión implícita con el hecho de que mejorar su salud puede beneficiar su score para futuros descuentos en su seguro. No menciones explícitamente "seguro" o "descuentos" a menos que sea muy sutil. Enfócate en la salud.
+
+            Aquí está la descripción del asegurado: "${userHealthInput}"
+
+            Por favor, proporciona consejos de bienestar claros y accionables.`;
+
+            let chatHistory = [];
+            chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+            const payload = { contents: chatHistory };
+            const apiKey = ""; // Leave as-is; Canvas will will provide at runtime
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+
+            try {
+                const response = await fetchWithRetry(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (response.candidates && response.candidates.length > 0 &&
+                    response.candidates[0].content && response.candidates[0].content.parts &&
+                    response.candidates[0].content.parts.length > 0) {
+                    return response.candidates[0].content.parts[0].text;
+                } else {
+                    console.error("Respuesta inesperada del LLM:", response);
+                    return "Lo siento, no pude generar consejos en este momento. La respuesta del modelo fue inesperada.";
+                }
+            } catch (error) {
+                console.error("Error al llamar a la API de LLM para el asesor de bienestar:", error);
+                return "Ha ocurrido un error al conectar con el asesor. Por favor, intenta de nuevo.";
+            }
+        }
+
+
+        // --- Utility function for API calls with retry logic ---
+        async function fetchWithRetry(url, options, retries = 3) {
+            for (let i = 0; i < retries; i++) {
+                try {
+                    const response = await fetch(url, options);
+                    if (!response.ok) {
+                        if (response.status === 429 && i < retries - 1) { // Too Many Requests
+                            const delay = Math.pow(2, i) * 1000 + Math.random() * 1000;
+                            await new Promise(res => setTimeout(res, delay));
+                            continue;
+                        }
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return await response.json();
+                } catch (error) {
+                    console.error(`Fetch attempt ${i + 1} failed:`, error);
+                    if (i === retries - 1) throw error;
+                    const delay = Math.pow(2, i) * 1000 + Math.random() * 1000;
+                    await new Promise(res => setTimeout(res, delay));
+                }
+            }
+            throw new Error("Maximum retry attempts reached for API call.");
+        }
+        */
+    </script>
+
+</body>
+</html>
